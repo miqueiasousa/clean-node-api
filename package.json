@@ -5,6 +5,10 @@
   "author": "Miqueias Sousa <miqueiassousa80@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "jest": "^26.0.1",
     "standard": "^14.3.4"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }
