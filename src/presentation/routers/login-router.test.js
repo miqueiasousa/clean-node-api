@@ -13,4 +13,16 @@ describe('Login router', () => {
 
     expect(httpResponse.statusCode).toBe(400)
   })
+
+  test('Sould return 400 if no password is provied', () => {
+    const sut = new LoginRouter()
+    const httpRequest = new HttpRequest({
+      body: {
+        email: 'any@any.com'
+      }
+    })
+    const httpResponse = sut.route(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(400)
+  })
 })
