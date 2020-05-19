@@ -25,4 +25,18 @@ describe('Login router', () => {
 
     expect(httpResponse.statusCode).toBe(400)
   })
+
+  test('Sould return 500 if no httpRequest is provied', () => {
+    const sut = new LoginRouter()
+    const httpResponse = sut.route()
+
+    expect(httpResponse.statusCode).toBe(500)
+  })
+
+  test('Sould return 500 if httpRequest has no body', () => {
+    const sut = new LoginRouter()
+    const httpResponse = sut.route({})
+
+    expect(httpResponse.statusCode).toBe(500)
+  })
 })
