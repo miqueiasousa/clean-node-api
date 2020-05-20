@@ -7,23 +7,23 @@ module.exports = class LoginRouter {
     this.authUseCase = authUseCase
   }
 
-  route (httpRequest) {
-    if (!httpRequest || !httpRequest.body || !this.authUseCase || !this.authUseCase.auth) {
+  async route (httpRequest) {
+    try {
+      const { email, password } = httpRequest.body
+
+      if (!email || !password) {
+        return makeHttpResponse(400, { message: 'Bad request' })
+      }
+
+      const accessToken = await this.authUseCase.auth(email, password)
+
+      if (!accessToken) {
+        return makeHttpResponse(401, { message: 'Unauthorized' })
+      }
+
+      return makeHttpResponse(200, { message: 'OK', accessToken })
+    } catch (error) {
       return makeHttpResponse(500, { message: 'Internal server error' })
     }
-
-    const { email, password } = httpRequest.body
-
-    if (!email || !password) {
-      return makeHttpResponse(400, { message: 'Bad request' })
-    }
-
-    const accessToken = this.authUseCase.auth(email, password)
-
-    if (!accessToken) {
-      return makeHttpResponse(401, { message: 'Unauthorized' })
-    }
-
-    return makeHttpResponse(200, { message: 'OK', accessToken })
   }
 }
