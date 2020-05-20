@@ -1,7 +1,6 @@
 module.exports = class HttpResponse {
-  constructor (statusCode, message, data) {
+  constructor (statusCode, body) {
     this.statusCode = statusCode
-    this.message = message
-    this.data = data || []
+    this.body = body
   }
 }

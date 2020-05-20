@@ -1,6 +1,6 @@
 const HttpResponse = require('../helpers/http-response')
 
-const makeHttpResponse = req => new HttpResponse(req)
+const makeHttpResponse = (statusCode, body) => new HttpResponse(statusCode, body)
 
 module.exports = class LoginRouter {
   constructor (authUseCase) {
@@ -9,17 +9,21 @@ module.exports = class LoginRouter {
 
   route (httpRequest) {
     if (!httpRequest || !httpRequest.body || !this.authUseCase || !this.authUseCase.auth) {
-      return makeHttpResponse(500, 'Internal server error')
+      return makeHttpResponse(500, { message: 'Internal server error' })
     }
 
     const { email, password } = httpRequest.body
 
     if (!email || !password) {
-      return makeHttpResponse(400, 'Bad request')
+      return makeHttpResponse(400, { message: 'Bad request' })
     }
 
-    this.authUseCase.auth(email, password)
+    const accessToken = this.authUseCase.auth(email, password)
 
-    return makeHttpResponse(401, 'Unauthorized')
+    if (!accessToken) {
+      return makeHttpResponse(401, { message: 'Unauthorized' })
+    }
+
+    return makeHttpResponse(200, { message: 'OK', accessToken })
   }
 }
