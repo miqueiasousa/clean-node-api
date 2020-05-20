@@ -82,4 +82,30 @@ describe('Login router', () => {
 
     expect(httpResponse.statusCode).toBe(401)
   })
+
+  test('Sould return 500 if no AuthUseCase is provided', () => {
+    const sut = new LoginRouter()
+    const httpRequest = makeHttpRequest({
+      body: {
+        email: 'any@any.any',
+        password: 'qwerty'
+      }
+    })
+    const httpResponse = sut.route(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(500)
+  })
+
+  test('Sould return 500 if AuthUseCase has no auth', () => {
+    const sut = new LoginRouter({})
+    const httpRequest = makeHttpRequest({
+      body: {
+        email: 'any@any.any',
+        password: 'qwerty'
+      }
+    })
+    const httpResponse = sut.route(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(500)
+  })
 })
