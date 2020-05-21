@@ -8,6 +8,7 @@ const makeSut = () => {
 
   return { sut, authUseCaseSpy, emailValidatorSpy }
 }
+
 const makeEmailValidatorSpy = () => {
   function EmailValidatorSpy () {
     this.isEmailValid = true
@@ -20,6 +21,7 @@ const makeEmailValidatorSpy = () => {
 
   return new EmailValidatorSpy()
 }
+
 const makeAuthUseCaseSpy = () => {
   function AuthUseCaseSpy () {
     this.accessToken = 'token'
@@ -33,6 +35,7 @@ const makeAuthUseCaseSpy = () => {
 
   return new AuthUseCaseSpy()
 }
+
 const makeHttpRequest = req => new HttpRequest(req)
 
 describe('Login router', () => {
