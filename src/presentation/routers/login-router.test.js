@@ -2,6 +2,15 @@ const LoginRouter = require('./login-router')
 const HttpRequest = require('../helpers/http-request')
 
 const makeSut = () => {
+  const authUseCaseSpy = makeAuthUseCaseSpy()
+
+  authUseCaseSpy.accessToken = 'token'
+
+  const sut = new LoginRouter(authUseCaseSpy)
+
+  return { sut, authUseCaseSpy }
+}
+const makeAuthUseCaseSpy = () => {
   function AuthUseCaseSpy () {
     this.auth = async (email, password) => {
       this.email = email
@@ -11,13 +20,7 @@ const makeSut = () => {
     }
   }
 
-  const authUseCaseSpy = new AuthUseCaseSpy()
-
-  authUseCaseSpy.accessToken = 'token'
-
-  const sut = new LoginRouter(authUseCaseSpy)
-
-  return { sut, authUseCaseSpy }
+  return new AuthUseCaseSpy()
 }
 const makeHttpRequest = req => new HttpRequest(req)
 
