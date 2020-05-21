@@ -3,15 +3,26 @@ const HttpRequest = require('../helpers/http-request')
 
 const makeSut = () => {
   const authUseCaseSpy = makeAuthUseCaseSpy()
+  const emailValidatorSpy = makeEmailValidatorSpy()
+  const sut = new LoginRouter(authUseCaseSpy, emailValidatorSpy)
 
-  authUseCaseSpy.accessToken = 'token'
+  return { sut, authUseCaseSpy, emailValidatorSpy }
+}
+const makeEmailValidatorSpy = () => {
+  function EmailValidatorSpy () {
+    this.isEmailValid = true
+    this.isValid = email => {
+      this.email = email
 
-  const sut = new LoginRouter(authUseCaseSpy)
+      return this.isEmailValid
+    }
+  }
 
-  return { sut, authUseCaseSpy }
+  return new EmailValidatorSpy()
 }
 const makeAuthUseCaseSpy = () => {
   function AuthUseCaseSpy () {
+    this.accessToken = 'token'
     this.auth = async (email, password) => {
       this.email = email
       this.password = password
@@ -29,6 +40,20 @@ describe('Login router', () => {
     const { sut } = makeSut()
     const httpRequest = makeHttpRequest({
       body: {
+        password: 'querty'
+      }
+    })
+    const httpResponse = await sut.route(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(400)
+  })
+
+  test('Sould return 400 if an invalid email is provied', async () => {
+    const { sut, emailValidatorSpy } = makeSut()
+    emailValidatorSpy.isEmailValid = false
+    const httpRequest = makeHttpRequest({
+      body: {
+        email: 'any@#$@any.commmm',
         password: 'querty'
       }
     })

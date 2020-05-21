@@ -3,8 +3,9 @@ const HttpResponse = require('../helpers/http-response')
 const makeHttpResponse = (statusCode, body) => new HttpResponse(statusCode, body)
 
 module.exports = class LoginRouter {
-  constructor (authUseCase) {
+  constructor (authUseCase, emailValidator) {
     this.authUseCase = authUseCase
+    this.emailValidator = emailValidator
   }
 
   async route (httpRequest) {
@@ -12,6 +13,10 @@ module.exports = class LoginRouter {
       const { email, password } = httpRequest.body
 
       if (!email || !password) {
+        return makeHttpResponse(400, { message: 'Bad request' })
+      }
+
+      if (!this.emailValidator.isValid(email)) {
         return makeHttpResponse(400, { message: 'Bad request' })
       }
 
