@@ -1,24 +1,23 @@
-const makeEmailValidatorSpy = () => {
-  function EmailValidatorSpy () {
-    this.isEmailValid = true
-    this.isValid = email => {
-      return this.isEmailValid
-    }
-  }
+class EmailValidator {
+  isEmailValid = true
 
-  return new EmailValidatorSpy()
+  isValid(email) {
+    return this.isEmailValid
+  }
 }
+
+const makeSut = () => new EmailValidator()
 
 describe('Email Validator', () => {
   test('Should returns true if validator returns true', () => {
-    const sut = makeEmailValidatorSpy()
+    const sut = makeSut()
     const isEmailValid = sut.isValid('any@anymail.com')
 
     expect(isEmailValid).toBe(true)
   })
 
   test('Should returns false if validator returns false', () => {
-    const sut = makeEmailValidatorSpy()
+    const sut = makeSut()
     sut.isEmailValid = false
     const isEmailValid = sut.isValid('any@anymail.com')
 
