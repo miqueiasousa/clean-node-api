@@ -1,7 +1,10 @@
 class EmailValidator {
   isEmailValid = true
+  email = ''
 
   isValid(email) {
+    this.email = email
+
     return this.isEmailValid
   }
 }
@@ -22,5 +25,13 @@ describe('Email Validator', () => {
     const isEmailValid = sut.isValid('any@anymail.com')
 
     expect(isEmailValid).toBe(false)
+  })
+
+  test('Should call validator with correct email', () => {
+    const sut = makeSut()
+
+    sut.isValid('any@anymail.com')
+
+    expect(sut.email).toBe('any@anymail.com')
   })
 })
