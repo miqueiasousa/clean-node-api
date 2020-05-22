@@ -16,4 +16,12 @@ describe('Email Validator', () => {
 
     expect(isEmailValid).toBe(true)
   })
+
+  test('Should returns false if validator returns false', () => {
+    const sut = makeEmailValidatorSpy()
+    sut.isEmailValid = false
+    const isEmailValid = sut.isValid('any@anymail.com')
+
+    expect(isEmailValid).toBe(false)
+  })
 })
