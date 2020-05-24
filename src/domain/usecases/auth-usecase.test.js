@@ -6,13 +6,15 @@ class AuthUseCase {
   accessToken = 'token'
 
   async auth(email, password) {
-    if (!email || !password) {
+    try {
+      if (!email || !password || !this.loadUserByEmailRepository) return null
+
+      await this.loadUserByEmailRepository.load(email)
+
+      return this.accessToken
+    } catch (error) {
       return null
     }
-
-    await this.loadUserByEmailRepository.load(email)
-
-    return this.accessToken
   }
 }
 
@@ -49,5 +51,19 @@ describe('Auth UseCase', () => {
     await sut.auth('any@any.com', 'qwerty')
 
     expect(loadUserByEmailRepositorySpy.email).toBe('any@any.com')
+  })
+
+  test('Should return null if no LoadUserByEmailRepository is provided', async () => {
+    const sut = new AuthUseCase()
+    const accessToken = await sut.auth('any@any.com', 'qwerty')
+
+    expect(accessToken).toBeNull()
+  })
+
+  test('Should return null if LoadUserByEmailRepository has no load method', async () => {
+    const sut = new AuthUseCase({})
+    const accessToken = await sut.auth('any@any.com', 'qwerty')
+
+    expect(accessToken).toBeNull()
   })
 })
