@@ -1,4 +1,8 @@
 class AuthUseCase {
+  constructor(loadUserByEmailRepository) {
+    this.loadUserByEmailRepository = loadUserByEmailRepository
+  }
+
   accessToken = 'token'
 
   async auth(email, password) {
@@ -6,8 +10,7 @@ class AuthUseCase {
       return null
     }
 
-    this.email = email
-    this.password = password
+    await this.loadUserByEmailRepository.load(email)
 
     return this.accessToken
   }
@@ -26,5 +29,19 @@ describe('Auth UseCase', () => {
     const accessToken = await sut.auth('any@any.com')
 
     expect(accessToken).toBeNull()
+  })
+
+  test('Should call LoadUserByEmailRepository with correct email', async () => {
+    class LoadUserByEmailRepositorySpy {
+      async load(email) {
+        this.email = email
+      }
+    }
+    const loadUserByEmailRepositorySpy = new LoadUserByEmailRepositorySpy()
+    const sut = new AuthUseCase(loadUserByEmailRepositorySpy)
+
+    await sut.auth('any@any.com', 'qwerty')
+
+    expect(loadUserByEmailRepositorySpy.email).toBe('any@any.com')
   })
 })
