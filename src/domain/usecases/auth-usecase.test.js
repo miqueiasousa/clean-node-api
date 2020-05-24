@@ -16,29 +16,35 @@ class AuthUseCase {
   }
 }
 
+const makeSut = () => {
+  class LoadUserByEmailRepositorySpy {
+    async load(email) {
+      this.email = email
+    }
+  }
+  const loadUserByEmailRepositorySpy = new LoadUserByEmailRepositorySpy()
+  const sut = new AuthUseCase(loadUserByEmailRepositorySpy)
+
+  return { sut, loadUserByEmailRepositorySpy }
+}
+
 describe('Auth UseCase', () => {
   test('Should return null if no email provided', async () => {
-    const sut = new AuthUseCase()
+    const { sut } = makeSut()
     const accessToken = await sut.auth()
 
     expect(accessToken).toBeNull()
   })
 
   test('Should return null if no password provided', async () => {
-    const sut = new AuthUseCase()
+    const { sut } = makeSut()
     const accessToken = await sut.auth('any@any.com')
 
     expect(accessToken).toBeNull()
   })
 
   test('Should call LoadUserByEmailRepository with correct email', async () => {
-    class LoadUserByEmailRepositorySpy {
-      async load(email) {
-        this.email = email
-      }
-    }
-    const loadUserByEmailRepositorySpy = new LoadUserByEmailRepositorySpy()
-    const sut = new AuthUseCase(loadUserByEmailRepositorySpy)
+    const { sut, loadUserByEmailRepositorySpy } = makeSut()
 
     await sut.auth('any@any.com', 'qwerty')
 
