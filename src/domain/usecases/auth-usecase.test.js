@@ -9,7 +9,9 @@ class AuthUseCase {
     try {
       if (!email || !password || !this.loadUserByEmailRepository) return null
 
-      await this.loadUserByEmailRepository.load(email)
+      const user = await this.loadUserByEmailRepository.load(email)
+
+      if (!user) return null
 
       return this.accessToken
     } catch (error) {
@@ -62,6 +64,13 @@ describe('Auth UseCase', () => {
 
   test('Should return null if LoadUserByEmailRepository has no load method', async () => {
     const sut = new AuthUseCase({})
+    const accessToken = await sut.auth('any@any.com', 'qwerty')
+
+    expect(accessToken).toBeNull()
+  })
+
+  test('Should return null if LoadUserByEmailRepository return null', async () => {
+    const { sut } = makeSut()
     const accessToken = await sut.auth('any@any.com', 'qwerty')
 
     expect(accessToken).toBeNull()
