@@ -1,36 +1,14 @@
-class AuthUseCase {
-  constructor(loadUserByEmailRepository) {
-    this.loadUserByEmailRepository = loadUserByEmailRepository
-  }
+const AuthUseCase = require('./auth-usecase')
 
-  accessToken = 'token'
-
-  async auth(email, password) {
-    try {
-      if (!email || !password || !this.loadUserByEmailRepository) return null
-
-      const user = await this.loadUserByEmailRepository.load(email)
-
-      if (!user) return null
-
-      return this.accessToken
-    } catch (error) {
-      return null
-    }
+class LoadUserByEmailRepositorySpy {
+  async load (email) {
+    return undefined
   }
 }
 
-const makeSut = () => {
-  class LoadUserByEmailRepositorySpy {
-    async load(email) {
-      this.email = email
-    }
-  }
-  const loadUserByEmailRepositorySpy = new LoadUserByEmailRepositorySpy()
-  const sut = new AuthUseCase(loadUserByEmailRepositorySpy)
+const loadUserByEmailRepositorySpy = () => new LoadUserByEmailRepositorySpy()
 
-  return { sut, loadUserByEmailRepositorySpy }
-}
+const makeSut = () => new AuthUseCase(loadUserByEmailRepositorySpy())
 
 describe('Auth UseCase', () => {
   test('Should return null if no email provided', async () => {
