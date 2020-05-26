@@ -6,20 +6,18 @@ class AuthUseCase {
   }
 
   async auth (email, password) {
-    if (!email) throw new Error('Email is undefined')
-    if (!password) throw new Error('Password is undefined')
+    try {
+      const [user] = await this.loadUserByEmailRepository.load(email)
+      const isValid = user && (await this.encrypterSpy.compare(password, user.password))
 
-    const [user] = await this.loadUserByEmailRepository.load(email)
+      if (!isValid) return undefined
 
-    if (!user) return undefined
+      const accessToken = await this.tokenGenerate.generate(user)
 
-    const passwordIsValid = await this.encrypterSpy.compare(password, user.password)
-
-    if (!passwordIsValid) return undefined
-
-    const accessToken = await this.tokenGenerate.generate(user)
-
-    return accessToken
+      return accessToken
+    } catch (error) {
+      throw new Error(error.message)
+    }
   }
 }
 

@@ -1,11 +1,8 @@
 const AuthUseCase = require('./auth-usecase')
 
-class LoadUserByEmailRepositorySpy {
-  constructor () {
-    this.user = {}
-  }
-
-  async load (email) {
+const loadUserByEmailRepositorySpy = () => ({
+  user: {},
+  load (email) {
     const users = [{ email: 'any@any.com', password: 'qwerty' }]
     const user = users.filter(e => email === e.email)
 
@@ -15,27 +12,21 @@ class LoadUserByEmailRepositorySpy {
 
     return this.user
   }
-}
+})
 
-class EncrypterSpy {
-  async compare (password, hashedPassword) {
+const encrypterSpy = () => ({
+  compare (password, hashedPassword) {
     if (password !== hashedPassword) return false
 
     return true
   }
-}
+})
 
-class TokenGenerateSpy {
-  async generate (user) {
+const tokenGenerateSpy = () => ({
+  generate (user) {
     return 'token'
   }
-}
-
-const loadUserByEmailRepositorySpy = () => new LoadUserByEmailRepositorySpy()
-
-const encrypterSpy = () => new EncrypterSpy()
-
-const tokenGenerateSpy = () => new TokenGenerateSpy()
+})
 
 const makeSut = () =>
   new AuthUseCase(loadUserByEmailRepositorySpy(), encrypterSpy(), tokenGenerateSpy())
