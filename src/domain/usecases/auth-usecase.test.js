@@ -23,32 +23,10 @@ describe('Auth UseCase', () => {
     expect(() => sut.auth()).rejects.toThrowError()
   })
 
-  test('Should call LoadUserByEmailRepository with correct email', async () => {
-    const { sut, loadUserByEmailRepositorySpy } = makeSut()
-
-    await sut.auth('any@any.com', 'qwerty')
-
-    expect(loadUserByEmailRepositorySpy.email).toBe('any@any.com')
-  })
-
-  test('Should return null if no LoadUserByEmailRepository is provided', async () => {
-    const sut = new AuthUseCase()
+  test('Should return undefined if user is no register', async () => {
+    const sut = makeSut()
     const accessToken = await sut.auth('any@any.com', 'qwerty')
 
-    expect(accessToken).toBeNull()
-  })
-
-  test('Should return null if LoadUserByEmailRepository has no load method', async () => {
-    const sut = new AuthUseCase({})
-    const accessToken = await sut.auth('any@any.com', 'qwerty')
-
-    expect(accessToken).toBeNull()
-  })
-
-  test('Should return null if LoadUserByEmailRepository return null', async () => {
-    const { sut } = makeSut()
-    const accessToken = await sut.auth('any@any.com', 'qwerty')
-
-    expect(accessToken).toBeNull()
+    expect(accessToken).toBeUndefined()
   })
 })
