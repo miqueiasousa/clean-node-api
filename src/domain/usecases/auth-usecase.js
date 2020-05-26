@@ -1,6 +1,7 @@
 class AuthUseCase {
-  constructor (loadUserByEmailRepository) {
+  constructor (loadUserByEmailRepository, encrypterSpy) {
     this.loadUserByEmailRepository = loadUserByEmailRepository
+    this.encrypterSpy = encrypterSpy
   }
 
   async auth (email, password) {
@@ -10,6 +11,10 @@ class AuthUseCase {
     const user = await this.loadUserByEmailRepository.load(email)
 
     if (!user) return undefined
+
+    const passwordIsValid = await this.encrypterSpy.compare(password, user.password)
+
+    if (!passwordIsValid) return undefined
 
     return 'token'
   }
