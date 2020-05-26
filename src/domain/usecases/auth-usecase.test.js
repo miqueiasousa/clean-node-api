@@ -11,18 +11,16 @@ const loadUserByEmailRepositorySpy = () => new LoadUserByEmailRepositorySpy()
 const makeSut = () => new AuthUseCase(loadUserByEmailRepositorySpy())
 
 describe('Auth UseCase', () => {
-  test('Should return null if no email provided', async () => {
-    const { sut } = makeSut()
-    const accessToken = await sut.auth()
+  test('Should throw error if no email provided', async () => {
+    const sut = makeSut()
 
-    expect(accessToken).toBeNull()
+    expect(() => sut.auth()).rejects.toThrowError()
   })
 
-  test('Should return null if no password provided', async () => {
-    const { sut } = makeSut()
-    const accessToken = await sut.auth('any@any.com')
+  test('Should throw error if no password provided', async () => {
+    const sut = makeSut()
 
-    expect(accessToken).toBeNull()
+    expect(() => sut.auth()).rejects.toThrowError()
   })
 
   test('Should call LoadUserByEmailRepository with correct email', async () => {
