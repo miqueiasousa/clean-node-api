@@ -6,7 +6,7 @@ class LoadUserByEmailRepositorySpy {
   }
 
   async load (email) {
-    const users = [{ email: 'any@any.com', passwor: 'querty' }]
+    const users = [{ email: 'any@any.com', password: 'qwerty' }]
     const user = users.filter(e => email === e.email)
 
     if (!user) return undefined
@@ -25,11 +25,20 @@ class EncrypterSpy {
   }
 }
 
+class TokenGenerateSpy {
+  async generate (user) {
+    return 'token'
+  }
+}
+
 const loadUserByEmailRepositorySpy = () => new LoadUserByEmailRepositorySpy()
 
 const encrypterSpy = () => new EncrypterSpy()
 
-const makeSut = () => new AuthUseCase(loadUserByEmailRepositorySpy(), encrypterSpy())
+const tokenGenerateSpy = () => new TokenGenerateSpy()
+
+const makeSut = () =>
+  new AuthUseCase(loadUserByEmailRepositorySpy(), encrypterSpy(), tokenGenerateSpy())
 
 describe('Auth UseCase', () => {
   test('Should throw error if no email provided', async () => {
@@ -56,5 +65,12 @@ describe('Auth UseCase', () => {
     const accessToken = await sut.auth('any@any.com', 'invalid_password')
 
     expect(accessToken).toBeUndefined()
+  })
+
+  test('Should return an token if correct credentials are provided', async () => {
+    const sut = makeSut()
+    const accessToken = await sut.auth('any@any.com', 'qwerty')
+
+    expect(accessToken).toBeTruthy()
   })
 })
