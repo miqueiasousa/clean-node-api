@@ -1,10 +1,7 @@
-class AuthUseCase {
-  constructor (loadUserByEmailRepository, encrypterSpy, tokenGenerate) {
-    this.loadUserByEmailRepository = loadUserByEmailRepository
-    this.encrypterSpy = encrypterSpy
-    this.tokenGenerate = tokenGenerate
-  }
-
+const factoryAuthUseCase = (loadUserByEmailRepository, encrypterSpy, tokenGenerate) => ({
+  loadUserByEmailRepository,
+  encrypterSpy,
+  tokenGenerate,
   async auth (email, password) {
     try {
       const [user] = await this.loadUserByEmailRepository.load(email)
@@ -19,6 +16,6 @@ class AuthUseCase {
       throw new Error(error.message)
     }
   }
-}
+})
 
-module.exports = AuthUseCase
+module.exports = factoryAuthUseCase
