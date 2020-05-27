@@ -1,20 +1,17 @@
 const AuthUseCase = require('./auth-usecase')
 
-const loadUserByEmailRepositorySpy = () => ({
-  user: {},
+const factoryLoadUserByEmailRepositorySpy = () => ({
   load (email) {
     const users = [{ email: 'any@any.com', password: 'qwerty' }]
     const user = users.filter(e => email === e.email)
 
     if (!user) return undefined
 
-    this.user = user
-
-    return this.user
+    return user
   }
 })
 
-const encrypterSpy = () => ({
+const factoryEncrypterSpy = () => ({
   compare (password, hashedPassword) {
     if (password !== hashedPassword) return false
 
@@ -22,14 +19,19 @@ const encrypterSpy = () => ({
   }
 })
 
-const tokenGenerateSpy = () => ({
+const factoryTokenGenerateSpy = () => ({
   generate (user) {
     return 'token'
   }
 })
 
-const makeSut = () =>
-  new AuthUseCase(loadUserByEmailRepositorySpy(), encrypterSpy(), tokenGenerateSpy())
+const makeSut = () => {
+  const LoadUserByEmailRepositorySpy = factoryLoadUserByEmailRepositorySpy()
+  const EncrypterSpy = factoryEncrypterSpy()
+  const TokenGenerateSpy = factoryTokenGenerateSpy()
+
+  return AuthUseCase(LoadUserByEmailRepositorySpy, EncrypterSpy, TokenGenerateSpy)
+}
 
 describe('Auth UseCase', () => {
   test('Should throw error if no email provided', async () => {
