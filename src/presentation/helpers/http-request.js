@@ -1,5 +1,3 @@
-module.exports = class HttpRequest {
-  constructor ({ body }) {
-    this.body = body
-  }
-}
+const factoryHttpRequest = ({ body }) => ({ body })
+
+module.exports = factoryHttpRequest

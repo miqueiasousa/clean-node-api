@@ -25,17 +25,12 @@ const factoryTokenGenerateSpy = () => ({
   }
 })
 
-const makeSut = () => {
-  const LoadUserByEmailRepositorySpy = factoryLoadUserByEmailRepositorySpy()
-  const EncrypterSpy = factoryEncrypterSpy()
-  const TokenGenerateSpy = factoryTokenGenerateSpy()
-
-  return AuthUseCase({
-    loadUserByEmailRepository: LoadUserByEmailRepositorySpy,
-    encrypter: EncrypterSpy,
-    tokenGenerate: TokenGenerateSpy
+const makeSut = () =>
+  AuthUseCase({
+    loadUserByEmailRepository: factoryLoadUserByEmailRepositorySpy(),
+    encrypter: factoryEncrypterSpy(),
+    tokenGenerate: factoryTokenGenerateSpy()
   })
-}
 
 describe('Auth UseCase', () => {
   test('Should throw error if no email provided', async () => {
