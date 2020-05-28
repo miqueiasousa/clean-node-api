@@ -1,11 +1,11 @@
-const factoryAuthUseCase = (loadUserByEmailRepository, encrypterSpy, tokenGenerate) => ({
+const factoryAuthUseCase = ({ loadUserByEmailRepository, encrypter, tokenGenerate }) => ({
   loadUserByEmailRepository,
-  encrypterSpy,
+  encrypter,
   tokenGenerate,
   async auth (email, password) {
     try {
       const [user] = await this.loadUserByEmailRepository.load(email)
-      const isValid = user && (await this.encrypterSpy.compare(password, user.password))
+      const isValid = user && (await this.encrypter.compare(password, user.password))
 
       if (!isValid) return undefined
 

@@ -30,7 +30,11 @@ const makeSut = () => {
   const EncrypterSpy = factoryEncrypterSpy()
   const TokenGenerateSpy = factoryTokenGenerateSpy()
 
-  return AuthUseCase(LoadUserByEmailRepositorySpy, EncrypterSpy, TokenGenerateSpy)
+  return AuthUseCase({
+    loadUserByEmailRepository: LoadUserByEmailRepositorySpy,
+    encrypter: EncrypterSpy,
+    tokenGenerate: TokenGenerateSpy
+  })
 }
 
 describe('Auth UseCase', () => {
