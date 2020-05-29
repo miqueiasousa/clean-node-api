@@ -1,4 +1,4 @@
-const factoryAuthUseCase = ({ loadUserByEmailRepository, encrypter, tokenGenerate }) => ({
+const factoryAuthUseCase = ({ loadUserByEmailRepository, encrypter, tokenGenerate } = {}) => ({
   loadUserByEmailRepository,
   encrypter,
   tokenGenerate,

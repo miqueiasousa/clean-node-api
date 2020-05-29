@@ -65,4 +65,10 @@ describe('Auth UseCase', () => {
 
     expect(accessToken).toBeTruthy()
   })
+
+  test('Should throw error if no dependencies provided', async () => {
+    const sut = AuthUseCase()
+
+    expect(() => sut.auth()).rejects.toThrowError()
+  })
 })
