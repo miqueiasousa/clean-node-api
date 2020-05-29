@@ -99,4 +99,17 @@ describe('Login router', () => {
     expect(httpResponse.statusCode).toBe(200)
     expect(httpResponse.body.accessToken).toBeTruthy()
   })
+
+  test('Sould return 500 if no dependencies provied', async () => {
+    const sut = LoginRouter()
+    const httpRequest = HttpRequest({
+      body: {
+        email: 'any@any.any',
+        password: 'qwerty'
+      }
+    })
+    const httpResponse = await sut.route(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(500)
+  })
 })

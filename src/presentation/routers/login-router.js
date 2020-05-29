@@ -1,10 +1,12 @@
 const HttpResponse = require('../helpers/http-response')
 
-const factoryLoginRouter = ({ authUseCase, emailValidator }) => ({
+const factoryLoginRouter = ({ authUseCase, emailValidator } = {}) => ({
   authUseCase,
   emailValidator,
   async route (httpRequest) {
     try {
+      if (!this.authUseCase || !this.emailValidator) throw new Error()
+
       const { email, password } = httpRequest.body
 
       if (!email || !password) {
