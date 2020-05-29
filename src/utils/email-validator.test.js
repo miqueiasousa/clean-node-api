@@ -1,28 +1,20 @@
 const EmailValidator = require('./email-validator')
-
-const makeSut = () => new EmailValidator()
+const validator = require('validator')
 
 describe('Email Validator', () => {
   test('Should returns true if validator returns true', () => {
-    const sut = makeSut()
+    const sut = EmailValidator
     const isEmailValid = sut.isValid('any@anymail.com')
 
     expect(isEmailValid).toBe(true)
   })
 
   test('Should returns false if validator returns false', () => {
-    const sut = makeSut()
-    sut.isEmailValid = false
+    validator.isEmailValid = false
+
+    const sut = EmailValidator
     const isEmailValid = sut.isValid('any@anymail.com')
 
     expect(isEmailValid).toBe(false)
-  })
-
-  test('Should call validator with correct email', () => {
-    const sut = makeSut()
-
-    sut.isValid('any@anymail.com')
-
-    expect(sut.email).toBe('any@anymail.com')
   })
 })
