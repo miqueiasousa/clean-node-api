@@ -1,6 +1,10 @@
+const bcrypt = require('bcrypt')
+
 const factoryEncrypter = () => ({
-  async compare (password, hashedPassword) {
-    return true
+  async compare (value, hashedvalue) {
+    const isValid = await bcrypt.compare(value, hashedvalue)
+
+    return isValid
   }
 })
 
