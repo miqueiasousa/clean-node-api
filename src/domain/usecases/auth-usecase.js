@@ -1,7 +1,7 @@
-const factoryAuthUseCase = ({ loadUserByEmailRepository, encrypter, tokenGenerate } = {}) => ({
+const factoryAuthUseCase = ({ loadUserByEmailRepository, encrypter, tokenGenerator } = {}) => ({
   loadUserByEmailRepository,
   encrypter,
-  tokenGenerate,
+  tokenGenerator,
   async auth (email, password) {
     try {
       const [user] = await this.loadUserByEmailRepository.load(email)
@@ -9,7 +9,7 @@ const factoryAuthUseCase = ({ loadUserByEmailRepository, encrypter, tokenGenerat
 
       if (!isValid) return undefined
 
-      const accessToken = await this.tokenGenerate.generate(user)
+      const accessToken = await this.tokenGenerator.generate(user)
 
       return accessToken
     } catch (error) {
