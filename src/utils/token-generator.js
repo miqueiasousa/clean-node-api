@@ -1,6 +1,8 @@
+const jwt = require('jsonwebtoken')
+
 const factoryTokenGenerator = () => ({
   async generate (data) {
-    return null
+    return jwt.sign(data, process.env.KEY || 'secret_password')
   }
 })
 
