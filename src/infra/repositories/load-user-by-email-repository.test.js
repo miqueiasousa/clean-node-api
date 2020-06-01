@@ -50,4 +50,10 @@ describe('LoadUserByEmail Repository', () => {
       password: userCreated.password
     })
   })
+
+  test('Should throw if no email is provided', () => {
+    const { sut } = makeSut()
+
+    expect(() => sut.load()).rejects.toThrowError()
+  })
 })
