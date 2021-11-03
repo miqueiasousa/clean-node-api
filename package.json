@@ -28,7 +28,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.5.8",
     "package.json": "^2.0.1",
-    "validator": "^13.0.0",
+    "validator": "^13.7.0",
     "yarn.lock": "^0.0.1-security"
   }
 }
